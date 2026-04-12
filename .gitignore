@@ -1,0 +1,35 @@
+# Exclude sensitive folders
+google-chrome/
+WhatsApp\ Desktop/
+outlook-for-linux/
+mozilla/
+joplin-desktop/
+pulse/
+dconf/
+StardewValley/
+TabNine/
+CurseForge/
+ClickUp/
+VirtualBox/
+wireshark/
+qBittorrent/
+session/
+arduino-ide/
+Arduino\ IDE/
+
+# Exclude specific sensitive files
+gh/hosts.yml
+composer/auth.json
+
+# Exclude large caches and state
+Code/CachedData/
+Code/Cache/
+Code/User/workspaceStorage/
+Code/User/globalStorage/
+swww/
+fontconfig/
+matplotlib/
+procps/
+psysh/
+qtvirtualkeyboard/
+jgit/

@@ -1,0 +1,146 @@
+#!/bin/bash
+# screenctl - A robust display management utility for Hyprland
+#
+# This script uses hyprctl and jq to manage external monitors.
+# It provides a rofi-based menu to duplicate or extend the display,
+# with support for rotation and positioning.
+
+set -euo pipefail
+
+# --- UTILITY FUNCTIONS ---
+
+# Shows an interactive menu using rofi.
+# Arguments:
+#   $1: The title prompt for the rofi menu.
+#   $@: The list of options to display.
+show_menu() {
+    local title="$1"
+    shift
+    printf "%s\n" "$@" | rofi -dmenu -p "$title" -i -theme-str 'window {width: 500px;}'
+}
+
+# Shows an error message using notify-send and exits.
+# Arguments:
+#   $1: The error message to display.
+show_error() {
+    notify-send -u critical "Screenctl Error" "$1"
+    exit 1
+}
+
+# --- HYPRLAND DISPLAY FUNCTIONS ---
+
+# Fetches all monitor data from hyprctl in JSON format.
+get_monitors_json() {
+    hyprctl monitors -j
+}
+
+# Gets the name of the primary laptop display.
+# It identifies the laptop screen by looking for common identifiers like eDP, LVDS.
+get_laptop_display_name() {
+    local monitors_json="$1"
+    echo "$monitors_json" | jq -r '.[] | select(.name | test("eDP|LVDS|DSI")) | .name' | head -n 1
+}
+
+# Gets the names of all connected external monitors.
+# Arguments:
+#   $1: The JSON output from get_monitors_json.
+#   $2: The name of the laptop display to exclude.
+get_external_monitor_names() {
+    local monitors_json="$1"
+    local laptop_display="$2"
+    echo "$monitors_json" | jq -r --arg laptop "$laptop_display" '.[] | select(.name != $laptop) | .name'
+}
+
+# --- MAIN LOGIC ---
+
+main() {
+    # 1. Get Monitor Information
+    local monitors_json
+    monitors_json=$(get_monitors_json)
+
+    local laptop_display
+    laptop_display=$(get_laptop_display_name "$monitors_json")
+    notify-send "Screenctl Debug" "Laptop Display: $laptop_display"
+    [ -z "$laptop_display" ] && show_error "Could not detect the laptop display."
+
+    local external_monitors
+    external_monitors=$(get_external_monitor_names "$monitors_json" "$laptop_display")
+    notify-send "Screenctl Debug" "External Monitors (initial): $external_monitors"
+    [ -z "$external_monitors" ] && notify-send "Screenctl" "No external monitors detected." && exit 0
+
+    local last_selected_monitor_file="/tmp/screenctl_last_monitor"
+    local previously_selected_monitor=""
+
+    if [ -f "$last_selected_monitor_file" ]; then
+        previously_selected_monitor=$(cat "$last_selected_monitor_file")
+        notify-send "Screenctl Debug" "Previously Selected Monitor: $previously_selected_monitor"
+    else
+        notify-send "Screenctl Debug" "No previous monitor file found."
+    fi
+
+    local effective_external_monitors
+
+    if [ -n "$external_monitors" ]; then
+        effective_external_monitors="$external_monitors"
+    elif [ -n "$previously_selected_monitor" ]; then
+        effective_external_monitors="$previously_selected_monitor"
+    else
+        notify-send "Screenctl" "No external monitors detected." && exit 0
+    fi
+
+    # 2. Select the Target Monitor
+    # local selected_monitor
+    selected_monitor=$(show_menu "Select Monitor" $external_monitors)
+    [ -z "$selected_monitor" ] && exit 0 # User cancelled
+
+    # 3. Select the Display Mode
+    local mode
+    mode=$(show_menu "Select Mode for $selected_monitor" "Extend" "Duplicate (Mirror)" "Disable")
+    [ -z "$mode" ] && exit 0
+
+    # 4. Apply the selected mode
+    local cmd=""
+    case "$mode" in
+        "Extend")
+            local orientation
+            orientation=$(show_menu "Select Orientation" "Horizontal" "Vertical (Left)" "Vertical (Right)" "Upside Down")
+            [ -z "$orientation" ] && exit 0
+
+            local transform=0
+            case "$orientation" in
+                "Horizontal")         transform=0 ;; # 0 degrees
+                "Vertical (Left)")    transform=1 ;; # 90 degrees
+                "Vertical (Right)")   transform=3 ;; # 270 degrees
+                "Upside Down")        transform=2 ;; # 180 degrees
+            esac
+
+            local position
+            position=$(show_menu "Position relative to Laptop" "Right of" "Left of" "Above" "Below")
+            [ -z "$position" ] && exit 0
+
+            local position_cmd="--output $selected_monitor --pos relative ${position,,} $laptop_display"
+            cmd="hyprctl keyword monitor \"$selected_monitor,preferred,auto,1,transform,$transform\""
+            ;;
+
+        "Duplicate (Mirror)")
+            cmd="hyprctl keyword monitor \"$selected_monitor,preferred,auto,1,mirror,$laptop_display\""
+            ;;
+
+        "Disable")
+            cmd="hyprctl keyword monitor \"$selected_monitor,disable\""
+            ;;
+    esac
+
+    # 5. Execute the command
+    if [ -n "$cmd" ]; then
+        eval "$cmd"
+        notify-send "Screenctl" "Display settings applied for $selected_monitor."
+    fi
+}
+
+# Ensure jq is installed
+if ! command -v jq &> /dev/null; then
+    show_error "jq is not installed. Please install it to use screenctl."
+fi
+
+main

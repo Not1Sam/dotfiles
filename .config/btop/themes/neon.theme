@@ -1,0 +1,83 @@
+# Main background, empty for terminal default, build-in themes are all transparent if not set
+theme[main_bg]="#0f0f0f"
+
+# Main text color
+theme[main_fg]="#ffffff"
+
+# Title color for boxes
+theme[title]="#33ccff"
+
+# Highlight color for keyboard shortcuts
+theme[hi_fg]="#00ff99"
+
+# Background color of selected item in processes box
+theme[selected_bg]="#33ccff"
+
+# Foreground color of selected item in processes box
+theme[selected_fg]="#000000"
+
+# Color of inactive/disabled text
+theme[inactive_fg]="#595959"
+
+# Color of logout / quit button
+theme[proc_misc]="#00ff99"
+
+# Cpu box outline color
+theme[cpu_box]="#33ccff"
+
+# Memory box outline color
+theme[mem_box]="#00ff99"
+
+# Net box outline color
+theme[net_box]="#33ccff"
+
+# Processes box outline color
+theme[proc_box]="#00ff99"
+
+# Box title transition color
+theme[div_line]="#595959"
+
+# Temperature graph colors
+theme[temp_start]="#33ccff"
+theme[temp_mid]="#00ff99"
+theme[temp_end]="#f38ba8"
+
+# CPU graph colors
+theme[cpu_start]="#33ccff"
+theme[cpu_mid]="#00ff99"
+theme[cpu_end]="#33ccff"
+
+# Mem graph colors
+theme[free_start]="#00ff99"
+theme[free_mid]="#33ccff"
+theme[free_end]="#00ff99"
+
+# Cached graph colors
+theme[cached_start]="#33ccff"
+theme[cached_mid]="#00ff99"
+theme[cached_end]="#33ccff"
+
+# Available graph colors
+theme[available_start]="#00ff99"
+theme[available_mid]="#33ccff"
+theme[available_end]="#00ff99"
+
+# Used graph colors
+theme[used_start]="#33ccff"
+theme[used_mid]="#00ff99"
+theme[used_end]="#33ccff"
+
+# Download graph colors
+theme[download_start]="#33ccff"
+theme[download_mid]="#00ff99"
+theme[download_end]="#33ccff"
+
+# Upload graph colors
+theme[upload_start]="#00ff99"
+theme[upload_mid]="#33ccff"
+theme[upload_end]="#00ff99"
+
+# Process list color gradient
+theme[proc_grad_start]="#33ccff"
+theme[proc_grad_mid]="#00ff99"
+theme[proc_grad_end]="#33ccff"

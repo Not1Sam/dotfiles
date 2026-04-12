@@ -1,0 +1,117 @@
+{
+  /* REMINDER: Notifications = Center Top | Menu = Right Full-Height | Animation = Slide Down */
+  "$schema": "/etc/xdg/swaync/configSchema.json",
+  "positionX": "center",
+  "positionY": "top",
+  "control-center-positionX": "right",
+  "control-center-positionY": "top",
+  "layer": "overlay",
+  "control-center-layer": "overlay",
+  "layer-shell": true,
+  "layer-shell-cover-screen": false,
+  "cssPriority": "user",
+  "notification-margin-top": 10,
+  "notification-margin-bottom": 10,
+  "notification-margin-right": 10,
+  "notification-margin-left": 10,
+  "control-center-margin-top": 0,
+  "control-center-margin-bottom": 0,
+  "control-center-margin-right": 0,
+  "control-center-margin-left": 0,
+  "notification-window-width": 400,
+  "notification-window-height": 600,
+  "control-center-width": 500,
+  "control-center-height": 1080,
+  "notification-icon-size": 64,
+  "notification-body-image-height": 100,
+  "notification-body-image-width": 200,
+  "timeout": 5,
+  "timeout-low": 2,
+  "timeout-critical": 0,
+  "fit-to-screen": false,
+  "keyboard-shortcuts": true,
+  "image-visibility": "always",
+  "transition-time": 0,
+  "hide-on-clear": false,
+  "pause-on-swipe": true,
+  "scripts": {
+    "notification": {
+      "exec": "canberra-gtk-play -i message-new-instant --volume=1.0",
+      "run-on": "receive"
+    }
+  },
+  "widgets": [
+    "title",
+    "dnd",
+    "buttons-grid#power",
+    "volume",
+    "backlight",
+    "buttons-grid#toggles",
+    "mpris",
+    "notifications"
+  ],
+  "widget-config": {
+    "title": {
+      "text": "Notifications",
+      "clear-all-button": true,
+      "button-text": "Clear All"
+    },
+    "dnd": {
+      "text": "Do Not Disturb"
+    },
+    "label#pfp": {
+      "text": " "
+    },
+    "buttons-grid#power": {
+      "actions": [
+        {
+          "label": "󰐥",
+          "command": "systemctl poweroff"
+        },
+        {
+          "label": "",
+          "command": "systemctl reboot"
+        },
+        {
+          "label": "",
+          "command": "hyprlock"
+        },
+        {
+          "label": "󰍃",
+          "command": "hyprctl dispatch exit"
+        }
+      ]
+    },
+    "volume": {
+      "label": "󰕾",
+      "show-per-app": true
+    },
+    "backlight": {
+      "label": "󰃟"
+    },
+    "buttons-grid#toggles": {
+      "actions": [
+        {
+          "label": "",
+          "command": "networkmanager_dmenu"
+        },
+        {
+          "label": "󰂯",
+          "command": "blueman-manager"
+        },
+        {
+          "label": "󰄘",
+          "command": "/home/bingus/.config/hypr/scripts/screenctl"
+        },
+        {
+          "label": "󰄄",
+          "command": "hyprpicker -a | wl-copy"
+        }
+      ]
+    },
+    "mpris": {
+      "image-size": 80,
+      "image-radius": 12
+    }
+  }
+}

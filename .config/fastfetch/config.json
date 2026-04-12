@@ -1,0 +1,55 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/master/doc/json_schema.json",
+  "logo": {
+    "source": "/home/bingus/.config/fastfetch/cat_logo.jpg",
+    "type": "kitty",
+    "height": 16,
+    "padding": {
+      "top": 2,
+      "left": 2
+    }
+  },
+  "display": {
+    "separator": " 󰄾 ",
+    "color": {
+      "keys": "cyan",
+      "output": "green"
+    }
+  },
+  "modules": [
+    {
+        "type": "title",
+        "key": "  󰄛",
+        "color": {
+            "user": "cyan",
+            "at": "white",
+            "host": "green"
+        },
+        "format": "{user-name} @ Labtoub"
+    },
+    {
+        "type": "separator",
+        "string": "━"
+    },
+    { "type": "os", "key": "  󰣇 系統" },
+    { "type": "kernel", "key": "  󰒋 カーネル" },
+    { "type": "uptime", "key": "  󱑂 稼働時間" },
+    { "type": "packages", "key": "  󰏖 パッケージ" },
+    { "type": "shell", "key": "  󰄾 シェル" },
+    { "type": "display", "key": "  󰍹 ディスプレイ" },
+    { "type": "wm", "key": "  󱂬 ウィンドウマネージャ" },
+    { "type": "terminal", "key": "  󰄛 端末" },
+    { "type": "cpu", "key": "   CPU" },
+    { "type": "gpu", "key": "  󰢮 GPU" },
+    { "type": "memory", "key": "   メモリ" },
+    { "type": "battery", "key": "  󰁹 バッテリー" },
+    "break",
+    {
+        "type": "colors",
+        "symbol": "circle",
+        "block": {
+            "range": [1, 7]
+        }
+    }
+  ]
+}

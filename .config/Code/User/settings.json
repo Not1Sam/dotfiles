@@ -1,0 +1,15 @@
+{
+    "lldb.suppressUpdateNotifications": true,
+    "window.titleBarStyle": "custom",
+    "remote.SSH.remotePlatform": {
+        "192.168.11.107": "linux",
+        "RewardEarth": "linux",
+        "192.168.11.110": "linux",
+        "dev": "linux"
+    },
+    "security.workspace.trust.untrustedFiles": "open",
+    "tabnine.experimentalAutoImports": true,
+    "terminal.external.linuxExec": "konsole",
+    "window.newWindowProfile": "9ahir lmotala9at",
+    "update.enableWindowsBackgroundUpdates": false
+}

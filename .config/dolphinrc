@@ -1,0 +1,18 @@
+[General]
+ShowFullPathInTitlebar=true
+ShowToolTips=true
+Version=202
+ViewPropsTimestamp=2025,8,14,15,55,57.734
+
+[KFileDialog Settings]
+Places Icons Auto-resize=false
+Places Icons Static Size=48
+
+[MainWindow]
+MenuBar=Disabled
+
+[PlacesPanel]
+IconSize=48
+
+[PreviewSettings]
+Plugins=appimagethumbnail,audiothumbnail,avif,comicbookthumbnail,cursorthumbnail,djvuthumbnail,ebookthumbnail,exrthumbnail,directorythumbnail,heif,imagethumbnail,jpegthumbnail,jxl,kraorathumbnail,windowsexethumbnail,windowsimagethumbnail,opendocumentthumbnail,librsvg,svgthumbnail,exe-thumbnailer

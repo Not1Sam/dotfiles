@@ -1,0 +1,83 @@
+#!/bin/bash
+# screenctl-quick - Quick display presets without interactive prompts
+
+set -euo pipefail
+
+LAPTOP_DISPLAYS=("eDP" "LVDS" "DSI")
+
+is_laptop_display() {
+    local display="$1"
+    for laptop_pattern in "${LAPTOP_DISPLAYS[@]}"; do
+        if [[ "$display" == *"$laptop_pattern"* ]]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+# Get laptop display name
+LAPTOP_NAME=$(hyprctl monitors -j | jq -r '.[] | select(.name | test("eDP|LVDS|DSI")) | .name' | head -1)
+
+# Get laptop info
+LAPTOP_INFO=$(hyprctl monitors -j | jq -r --arg name "$LAPTOP_NAME" '.[] | select(.name == $name) | .x, .y, .width, .height')
+read -r LAPTOP_X LAPTOP_Y LAPTOP_WIDTH LAPTOP_HEIGHT <<< "$LAPTOP_INFO"
+
+# Get external monitor name (assuming only one for quick presets, or the first detected)
+EXTERNAL_NAME=$(hyprctl monitors -j | jq -r '.[] | select(.connected == true and (.name | test("eDP|LVDS|DSI") | not)) | .name' | head -1)
+
+# Get external monitor info
+EXTERNAL_INFO=$(hyprctl monitors -j | jq -r --arg name "$EXTERNAL_NAME" '.[] | select(.name == $name) | .x, .y, .width, .height')
+read -r EXTERNAL_X EXTERNAL_Y EXTERNAL_WIDTH EXTERNAL_HEIGHT <<< "$EXTERNAL_INFO"
+
+case "${1:-help}" in
+    "vertical-right")
+        # Extend right, rotate right (270 deg counter-clockwise)
+        local new_x=$((LAPTOP_X + LAPTOP_WIDTH))
+        hyprctl keyword monitor "$EXTERNAL_NAME,1920x1080@60,$new_x $LAPTOP_Y,1,3" # assuming 1920x1080 and 60Hz
+        echo "✓ Vertical monitor positioned right (via hyprctl)"
+        ;;
+    "vertical-left")
+        # Extend left, rotate left (90 deg clockwise)
+        local new_x=$((LAPTOP_X - 1080)) # Assuming rotated external width
+        hyprctl keyword monitor "$EXTERNAL_NAME,1920x1080@60,$new_x $LAPTOP_Y,1,1" # assuming 1920x1080 and 60Hz
+        echo "✓ Vertical monitor positioned left (via hyprctl)"
+        ;;
+    "duplicate")
+        # Mirror, normal rotation (0)
+        hyprctl keyword monitor "$EXTERNAL_NAME,$LAPTOP_WIDTH x $LAPTOP_HEIGHT@60,$LAPTOP_X $LAPTOP_Y,1,0" # Mirror at laptop resolution
+        echo "✓ Display duplicated (horizontal, via hyprctl)"
+        ;;
+    "duplicate-vertical")
+        # Mirror, rotate left (90 deg clockwise)
+        hyprctl keyword monitor "$EXTERNAL_NAME,$LAPTOP_WIDTH x $LAPTOP_HEIGHT@60,$LAPTOP_X $LAPTOP_Y,1,1" # Mirror at laptop resolution
+        echo "✓ Display duplicated (vertical, via hyprctl)"
+        ;;
+    "extend-right")
+        # Extend right, normal rotation (0)
+        local new_x=$((LAPTOP_X + LAPTOP_WIDTH))
+        hyprctl keyword monitor "$EXTERNAL_NAME,1920x1080@60,$new_x $LAPTOP_Y,1,0" # assuming 1920x1080 and 60Hz
+        echo "✓ Monitor extended to the right (via hyprctl)"
+        ;;
+    "mirror-off")
+        hyprctl keyword monitor "$EXTERNAL_NAME,disable"
+        echo "✓ External monitor disabled (via hyprctl)"
+        ;;
+    "")
+        # No external monitor connected or preset given
+        ;;
+    *)
+        echo "screenctl-quick - Quick display presets (Hyprland)"
+        echo ""
+        echo "Usage: screenctl-quick <preset>"
+        echo ""
+        echo "Presets:"
+        echo "  vertical-right    - Vertical monitor right of laptop"
+        echo "  vertical-left     - Vertical monitor left of laptop"
+        echo "  duplicate         - Mirror display (horizontal)"
+        echo "  duplicate-vertical- Mirror display (vertical)"
+        echo "  extend-right      - Extend to right (horizontal)"
+        echo "  mirror-off        - Disable external monitor"
+        echo ""
+        echo "Example: screenctl-quick vertical-right"
+        ;;
+esac

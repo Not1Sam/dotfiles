@@ -1,0 +1,100 @@
+configuration {
+    modi: "drun,filebrowser,ssh";
+    show-icons: true;
+    display-drun: "󰄛";
+    display-filebrowser: "󰉋";
+    display-ssh: "󰒋";
+    drun-display-format: "{name}";
+    terminal: "kitty";
+    
+    scroll-method: 0;
+    fixed-num-lines: true;
+}
+
+* {
+    /* Red-Dominant Cyber-Hacker Palette */
+    bg-col:          #08161ad9;    /* Deep Cyber Black (85% Opacity) */
+    accent:          #FC0543;      /* Neon Crimson Red (Dominant) */
+    accent-bg:       #FC05431a;    /* Very Dark Red Translucency (10%) */
+    blue-neon:       #00d4ff;      /* Dark Neon Blue (Subtle highlights) */
+    
+    font: "BigBlueTermPlus Nerd Font Mono 12";
+    background-color: transparent;
+}
+
+window {
+    width: 35%;
+    border: 3px;               /* Thicker dominant border */
+    border-color: @accent;
+    background-color: @bg-col;
+    border-radius: 20px;
+    transparency: "real";
+}
+
+mainbox {
+    padding: 20px;
+    children: [ "inputbar", "listview" ];
+}
+
+inputbar {
+    margin: 5px 5px 15px 5px;
+    padding: 12px;
+    background-color: @accent-bg;
+    border: 1px;
+    border-color: @accent;     /* Red Input Border */
+    border-radius: 15px;
+    children: [ "prompt", "entry" ];
+}
+
+prompt {
+    padding: 0px 10px 0px 5px;
+    text-color: @accent;       /* Red Prompt */
+}
+
+entry {
+    text-color: @accent;       /* Red Input Text */
+    placeholder: "SYSTEM READY...";
+    placeholder-color: #FC054344;
+}
+
+listview {
+    columns: 1;
+    lines: 6;
+    spacing: 10px;
+    fixed-height: false;
+    scrollbar: false;
+}
+
+element {
+    padding: 12px 15px;
+    border-radius: 12px;
+    background-color: @accent-bg; /* Red Translucency for items */
+    text-color: @accent;          /* Red text by default */
+}
+
+element normal.normal {
+    background-color: @accent-bg;
+    text-color: @accent;
+}
+
+element alternate.normal {
+    background-color: @accent-bg;
+    text-color: @accent;
+}
+
+element selected.normal {
+    background-color: @accent;    /* Full neon red highlight */
+    text-color: #08161aff;       /* Dark text for contrast */
+    border: 1px;
+    border-color: @blue-neon;    /* Subtle blue highlight on selection */
+}
+
+element-text {
+    vertical-align: 0.5;
+    text-color: inherit;
+}
+
+element-icon {
+    size: 24px;
+    padding: 0px 15px 0px 0px;
+}
