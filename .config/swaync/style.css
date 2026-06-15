@@ -1,9 +1,11 @@
+@import "../../.cache/wal/colors-swaync.css";
+
 /* Gold and Teal Theme (Exact Waybar Match) */
-@define-color bg rgba(40, 41, 39, 0.75);
-@define-color gold #B0AC76;
-@define-color teal #4291A6;
-@define-color text #ffffff;
-@define-color gray #a0a0a0;
+@define-color bg @background;
+@define-color gold @color3;
+@define-color teal @color5;
+@define-color text @foreground;
+@define-color gray @color8;
 
 * {
     font-family: "BigBlueTermPlus Nerd Font";

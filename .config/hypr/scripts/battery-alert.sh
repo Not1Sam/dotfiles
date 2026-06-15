@@ -18,23 +18,14 @@ ICON_15="battery-caution"
 ICON_10="battery-caution"
 ICON_5="battery-empty"
 
-# Sounds
-S_PLUG="/usr/share/sounds/freedesktop/stereo/power-plug.oga"
-S_UNPLUG="/usr/share/sounds/freedesktop/stereo/power-unplug.oga"
-S_20="/usr/share/sounds/freedesktop/stereo/message-new-instant.oga"
-S_15="/usr/share/sounds/freedesktop/stereo/dialog-warning.oga"
-S_10="/usr/share/sounds/freedesktop/stereo/dialog-error.oga"
-S_5="/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
-
 send_alert() {
     local urgency=$1
     local title=$2
     local msg=$3
     local icon=$4
-    local sound=$5
     
+    # We only send the notification. SwayNC handles the sound via its script.
     notify-send -u "$urgency" -a "Power" "$title" "$msg" -i "$icon" -t 5000
-    paplay "$sound" || canberra-gtk-play -f "$sound" 2>/dev/null
 }
 
 # Initial status
@@ -42,8 +33,11 @@ BAT_PATH=$(find /sys/class/power_supply/ -name "BAT*" | head -n 1)
 LAST_STATUS=$(cat "$BAT_PATH/status" 2>/dev/null)
 
 while true; do
-    BAT_PATH=$(find /sys/class/power_supply/ -name "BAT*" | head -n 1)
-    if [ -z "$BAT_PATH" ]; then sleep 60; continue; fi
+    # Only find BAT_PATH if it's not set
+    if [ -z "$BAT_PATH" ]; then
+        BAT_PATH=$(find /sys/class/power_supply/ -name "BAT*" | head -n 1)
+        if [ -z "$BAT_PATH" ]; then sleep 60; continue; fi
+    fi
     
     CAPACITY=$(cat "$BAT_PATH/capacity" 2>/dev/null)
     STATUS=$(cat "$BAT_PATH/status" 2>/dev/null)
@@ -52,10 +46,10 @@ while true; do
     # 1. Improved Charger Detection
     if [ "$STATUS" != "$LAST_STATUS" ]; then
         if [ "$STATUS" = "Discharging" ]; then
-            send_alert "normal" "󱐌 Charger Disconnected" "Power source removed. Battery: $CAPACITY%" "$ICON_DIS" "$S_UNPLUG"
+            send_alert "normal" "󱐌 Charger Disconnected" "Power source removed. Battery: $CAPACITY%" "$ICON_DIS"
             LAST_NOTIF=0
         elif [[ "$STATUS" == "Charging" || "$STATUS" == "Full" ]]; then
-            send_alert "normal" "󱐋 Charger Connected" "Power source detected. Battery: $CAPACITY%" "$ICON_CHG" "$S_PLUG"
+            send_alert "normal" "󱐋 Charger Connected" "Power source detected. Battery: $CAPACITY%" "$ICON_CHG"
         fi
         LAST_STATUS="$STATUS"
     fi
@@ -64,16 +58,10 @@ while true; do
     if [ "$STATUS" = "Discharging" ]; then
         if [ $((NOW - LAST_NOTIF)) -ge $COOLDOWN ]; then
             if [ "$CAPACITY" -le "$T_5" ]; then
-                send_alert "critical" "!!! EMERGENCY !!!" "Battery critically low: $CAPACITY%" "$ICON_5" "$S_5"
-                LAST_NOTIF=$NOW
-            elif [ "$CAPACITY" -le "$T_10" ]; then
-                send_alert "critical" "!! DANGER !!" "Battery very low: $CAPACITY%" "$ICON_10" "$S_10"
-                LAST_NOTIF=$NOW
-            elif [ "$CAPACITY" -le "$T_15" ]; then
-                send_alert "critical" "! WARNING !" "Battery low: $CAPACITY%" "$ICON_15" "$S_15"
+                send_alert "critical" "!!! EMERGENCY !!!" "Battery critically low: $CAPACITY%" "$ICON_5"
                 LAST_NOTIF=$NOW
             elif [ "$CAPACITY" -le "$T_20" ]; then
-                send_alert "normal" "Battery Caution" "Battery level: $CAPACITY%" "$ICON_20" "$S_20"
+                send_alert "normal" "Battery Caution" "Battery level: $CAPACITY%" "$ICON_20"
                 LAST_NOTIF=$NOW
             fi
         fi
@@ -81,5 +69,6 @@ while true; do
         LAST_NOTIF=0
     fi
 
-    sleep 1
+    # Increased sleep interval to 60 seconds to reduce CPU wakeups
+    sleep 60
 done

@@ -1,14 +1,15 @@
-@define-color bg rgba(40, 41, 39, 0.75);
-@define-color gold #B0AC76;
-@define-color teal #4291A6;
-@define-color text #ffffff;
+@import "../../.cache/wal/colors-waybar.css";
 
+@define-color bg rgba(20, 20, 20, 0.7);
+@define-color gold @color3;
+@define-color teal @color5;
+@define-color text @foreground;
+
+/* Hyprland Mac-Style Parity */
 * {
-    font-family: "BigBlueTermPlus Nerd Font", "BigBlueTermPlus Nerd Font Mono";
+    font-family: "BigBlueTermPlus Nerd Font", "JetBrainsMono Nerd Font";
     font-size: 13px;
     font-weight: bold;
-    /* Smooth transitions for state changes */
-    transition: all 0.5s cubic-bezier(.4, 0, .2, 1);
 }
 
 window#waybar {
@@ -16,12 +17,32 @@ window#waybar {
     color: @text;
 }
 
-#workspaces {
+/* Island Modules */
+#workspaces, #clock, #network, #cpu, #memory, #pulseaudio, #battery, #tray, #custom-menu {
     background: @bg;
+    padding: 2px 15px;
+    margin: 4px 4px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* The Integrated Waybar Dock (Left side) */
+#taskbar {
+    background: rgba(5, 5, 5, 0.8);
     margin: 4px;
     padding: 2px 8px;
-    border-radius: 16px;
-    border: 1px solid rgba(176, 172, 118, 0.3);
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#taskbar button {
+    padding: 0px 8px;
+    border-radius: 12px;
+}
+
+#taskbar button.active {
+    background: rgba(255, 255, 255, 0.1);
+    border-bottom: 2px solid @teal;
 }
 
 #workspaces button {
@@ -32,69 +53,14 @@ window#waybar {
 
 #workspaces button.active {
     color: @gold;
-    background: rgba(176, 172, 118, 0.2);
-    padding: 0px 16px;
-    box-shadow: inset 0 0 12px rgba(176, 172, 118, 0.4);
+    background: rgba(255, 255, 255, 0.1);
 }
 
-#workspaces button:hover {
-    background: rgba(255, 255, 255, 0.15);
-    color: @text;
-}
-
-#window, #clock, #network, #cpu, #memory, #pulseaudio, #battery, #tray, #custom-menu {
-    background: @bg;
-    padding: 0px 15px;
-    margin: 4px 4px;
-    border-radius: 16px;
-    border: 1px solid rgba(66, 145, 166, 0.3);
-}
-
-/* Animate individual icons on hover */
-#clock:hover, #network:hover, #cpu:hover, #memory:hover, #pulseaudio:hover, #battery:hover, #custom-menu:hover {
-    background: rgba(60, 61, 59, 0.95);
-    padding: 0px 20px;
-    color: @text;
-}
-
-/* Pulsing for charging and muted states */
-#battery.charging {
-    color: #98fb98;
-    animation: pulse-green 2s infinite ease-in-out;
-}
-
-#pulseaudio.muted {
-    background-color: #f53c3c;
-    color: #ffffff;
-}
-
-/* "男根" Menu Icon Pulse */
-#custom-menu {
-    color: @gold;
-    animation: menu-glow 4s infinite alternate ease-in-out;
-}
-
-@keyframes pulse-green {
-    0% { background: rgba(152, 251, 152, 0.1); }
-    50% { background: rgba(152, 251, 152, 0.3); }
-    100% { background: rgba(152, 251, 152, 0.1); }
-}
-
-@keyframes pulse-red {
-    0% { background: rgba(245, 60, 60, 0.1); }
-    50% { background: rgba(245, 60, 60, 0.3); }
-    100% { background: rgba(245, 60, 60, 0.1); }
-}
-
-@keyframes menu-glow {
-    0% { text-shadow: 0 0 0px @gold; }
-    100% { text-shadow: 0 0 10px @gold, 0 0 20px @gold; }
-}
-
-#window { color: @gold; }
+/* Status colors */
 #clock { color: @teal; }
 #network { color: @gold; }
 #cpu { color: @teal; }
 #memory { color: @gold; }
 #pulseaudio { color: @teal; }
 #battery { color: @gold; }
+#custom-menu { color: @gold; }

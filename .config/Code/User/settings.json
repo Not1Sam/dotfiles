@@ -11,5 +11,14 @@
     "tabnine.experimentalAutoImports": true,
     "terminal.external.linuxExec": "konsole",
     "window.newWindowProfile": "9ahir lmotala9at",
-    "update.enableWindowsBackgroundUpdates": false
+    "update.enableWindowsBackgroundUpdates": false,
+    "workbench.iconTheme": "vscode-icons",
+    "terminal.external.windowsExec": "wt.exe",
+    "code-runner.runInTerminal": false,
+    "code-runner.executorMap": {
+        "python": "start cmd /k python -u \"$fileName\""
+    },
+    "telemetry.telemetryLevel": "off",
+    "editor.minimap.enabled": false,
+    "workbench.startupEditor": "none"
 }

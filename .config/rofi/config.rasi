@@ -11,12 +11,14 @@ configuration {
     fixed-num-lines: true;
 }
 
+@import "~/.cache/wal/colors-rofi.rasi"
+
 * {
-    /* Red-Dominant Cyber-Hacker Palette */
-    bg-col:          #08161ad9;    /* Deep Cyber Black (85% Opacity) */
-    accent:          #FC0543;      /* Neon Crimson Red (Dominant) */
-    accent-bg:       #FC05431a;    /* Very Dark Red Translucency (10%) */
-    blue-neon:       #00d4ff;      /* Dark Neon Blue (Subtle highlights) */
+    /* Dynamic Palette */
+    bg-col:          @background;
+    accent:          @color5;
+    accent-bg:       rgba(0,0,0,0.2);
+    blue-neon:       @color4;
     
     font: "BigBlueTermPlus Nerd Font Mono 12";
     background-color: transparent;
